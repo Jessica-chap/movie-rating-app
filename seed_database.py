@@ -17,3 +17,33 @@ model.db.create_all()
 
 with open('data/movies.json') as f:
     movie_data = json.loads(f.read())
+
+# Create movies, store them in list so we can use them
+# to create fake ratings later
+movies_in_db = []
+for movie in movie_data:
+    # TODO: get the title, overview, and poster_path from the movie
+    # dictionary. Then, get the release_date and convert it to a
+    # datetime object with datetime.strptime
+    title, overview, poster_path, release_date = (movie['title'], movie['overview'], movie['poster_path'],
+                                     datetime.strptime(movie['release_date'], '%Y-%m-%d'))
+    
+    # TODO: create a movie here and append it to movies_in_db
+    seed_movie = crud.create_movie(title, overview, release_date, poster_path)
+    
+    movies_in_db.append(seed_movie)
+
+
+    for n in range(10):
+        email = f'user{n}@test.com'  # Voila! A unique email!
+        password = 'test'
+
+        # TODO: create a user here
+        seed_user = crud.create_user(email, password)
+
+        # TODO: create 10 ratings for the user
+        for n in range(10):
+            random_movie = choice(movies_in_db)
+            random_rating = randint(1,5)
+            
+            crud.create_rating(seed_user, random_movie, random_rating)
